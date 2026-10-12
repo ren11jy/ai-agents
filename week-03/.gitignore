@@ -1,0 +1,20 @@
+# 环境与缓存
+.venv/
+__pycache__/
+.pytest_cache/
+
+# LaTeX 中间文件（保留 .tex 源文件）
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+
+# 凭据
+.env
+.env.*
+
+# 说明：results.csv / results-table.tex / results-params.tex / results.png
+# 与 report.pdf 属于本次实际结果，故意不忽略，以便随报告一并保存。
