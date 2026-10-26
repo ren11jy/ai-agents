@@ -2,29 +2,41 @@
 
 
 def summarize_values(values):
-    """整理普通整数列表；不修改输入。
+    """按首次出现顺序去重，统计频数，并记录重复值。"""
+    unique = []
+    counts = {}
+    repeated = set()
 
-    返回 {"unique": 首次出现顺序的去重列表,
-          "counts": 每个整数的出现次数字典,
-          "repeated": 出现次数大于 1 的整数集合}。
-    空输入返回 {"unique": [], "counts": {}, "repeated": set()}。
-    每次调用产生独立结果，结果中的列表、字典、集合可以单独修改。
-    """
-    raise NotImplementedError("请实现 summarize_values")
+    for number in values:
+        if number in counts:
+            counts[number] += 1
+            repeated.add(number)
+        else:
+            unique.append(number)
+            counts[number] = 1
 
+    return {"unique": unique, "counts": counts, "repeated": repeated}
 
 def apply_changes(original, updates, removals):
-    """在新字典上应用修改清单；三个输入均不修改。
+    """在原记录的副本上先更新后删除，并比较最终变化。"""
+    record = dict(original)
 
-    original 为字符串键、整数值的字典。
-    updates 为按顺序执行的 (键, 值) 元组列表，后一次更新覆盖前一次。
-    所有更新完成后，再按 removals 删除；缺失键与重复删除均可忽略。
-    返回 {"record": 新字典, "changed": 最终相对 original 变化的键集合}。
-    改回原值、新增后又删除都不算最终变化；字典键顺序不作要求。
-    每次调用产生独立结果。
-    """
-    raise NotImplementedError("请实现 apply_changes")
+    for key, value in updates:
+        record[key] = value
 
+    for key in removals:
+        if key in record:
+            del record[key]
+
+    # 只在一边出现的键：最终新增或删除
+    changed = set(original) ^ set(record)
+
+    # 两边都有的键：检查最终值是否不同
+    for key in set(original) & set(record):
+        if original[key] != record[key]:
+            changed.add(key)
+
+    return {"record": record, "changed": changed}
 
 def compare_measurements(ids, baseline, current, threshold):
     """对齐两次测量；不修改输入，返回独立的新结果。
